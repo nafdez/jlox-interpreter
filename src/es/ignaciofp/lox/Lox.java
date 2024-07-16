@@ -31,37 +31,44 @@ public class Lox {
     }
 
     private static void runPrompt() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader br = new BufferedReader(
+            new InputStreamReader(System.in)
+        );
 
-        while(true) {
-            System.out.println("> ");
+        while (true) {
+            System.out.print("> ");
             String line = br.readLine();
             if (line == null) break;
             run(line);
             hadError = false;
+            System.out.println();
         }
     }
 
     private static void run(String source) {
         Scanner sc = new Scanner(source);
         List<Token> tokens = sc.scanTokens();
+        Parser parser = new Parser(tokens);
+        Expr expression = parser.parse();
 
-        for (Token token : tokens) {
-            System.out.println(token);
-        }
+        if (hadError) return;
+        System.out.println(new AstPrinter().print(expression));
     }
 
     public static void error(int line, String message) {
         report(line, "", message);
     }
 
+    public static void error(Token token, String message) {
+        if (token.type == TokenType.EOF) {
+            report(token.line, " at end", message);
+        } else {
+            report(token.line, " at '" + token.lexeme + "'", message);
+        }
+    }
+
     private static void report(int line, String where, String message) {
-        System.err.printf(
-            "[line %s] Error%s: ",
-            line,
-            where,
-            message
-        );
+        System.err.printf("[line %s] Error%s: ", line, where, message);
         hadError = true;
     }
 }
