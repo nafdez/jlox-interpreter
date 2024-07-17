@@ -24,7 +24,21 @@ public class Parser {
     }
 
     private Expr expression() {
-        return equality();
+        return ternary();
+    }
+
+    private Expr ternary() {
+        Expr expr = equality();
+
+        while (match(QUESTION_MARK)) {
+            Expr left = ternary();
+            while (match(COLON)) {
+                Expr right = ternary();
+                return new Expr.Ternary(expr, left, right);
+            }
+        }
+
+        return expr;
     }
 
     private Expr equality() {

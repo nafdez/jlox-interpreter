@@ -96,11 +96,17 @@ public class Scanner {
             case '+':
                 addToken(PLUS);
                 break;
+            case ':':
+                addToken(COLON);
+                break;
             case ';':
                 addToken(SEMICOLON);
                 break;
             case '*':
                 addToken(STAR);
+                break;
+            case '?':
+                addToken(QUESTION_MARK);
                 break;
             case '!':
                 addToken(match('=') ? BANG_EQUAL : BANG);

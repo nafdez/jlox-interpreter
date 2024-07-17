@@ -3,13 +3,33 @@
 //
 package es.ignaciofp.lox;
 
+import java.util.List;
+
 public abstract class Expr {
 	public interface Visitor<R> {
+		public R visitTernaryExpr(Ternary expr);
 		public R visitBinaryExpr(Binary expr);
+		public R visitUnaryExpr(Unary expr);
 		public R visitGroupingExpr(Grouping expr);
 		public R visitLiteralExpr(Literal expr);
-		public R visitUnaryExpr(Unary expr);
 	}
+	public static class Ternary extends Expr {
+		public final Expr condition;
+		public final Expr left;
+		public final Expr right;
+
+		public Ternary(Expr condition, Expr left, Expr right) {
+			this.condition = condition;
+			this.left = left;
+			this.right = right;
+		}
+
+		@Override
+		public <R> R accept(Visitor<R> visitor) {
+			return visitor.visitTernaryExpr(this);
+		}
+	}
+
 	public static class Binary extends Expr {
 		public final Expr left;
 		public final Token operator;
@@ -24,6 +44,21 @@ public abstract class Expr {
 		@Override
 		public <R> R accept(Visitor<R> visitor) {
 			return visitor.visitBinaryExpr(this);
+		}
+	}
+
+	public static class Unary extends Expr {
+		public final Token operator;
+		public final Expr right;
+
+		public Unary(Token operator, Expr right) {
+			this.operator = operator;
+			this.right = right;
+		}
+
+		@Override
+		public <R> R accept(Visitor<R> visitor) {
+			return visitor.visitUnaryExpr(this);
 		}
 	}
 
@@ -50,21 +85,6 @@ public abstract class Expr {
 		@Override
 		public <R> R accept(Visitor<R> visitor) {
 			return visitor.visitLiteralExpr(this);
-		}
-	}
-
-	public static class Unary extends Expr {
-		public final Token operator;
-		public final Expr right;
-
-		public Unary(Token operator, Expr right) {
-			this.operator = operator;
-			this.right = right;
-		}
-
-		@Override
-		public <R> R accept(Visitor<R> visitor) {
-			return visitor.visitUnaryExpr(this);
 		}
 	}
 
