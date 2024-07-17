@@ -3,8 +3,6 @@
 //
 package es.ignaciofp.lox;
 
-import java.util.List;
-
 public abstract class Expr {
 	public interface Visitor<R> {
 		public R visitTernaryExpr(Ternary expr);
