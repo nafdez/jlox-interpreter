@@ -52,11 +52,11 @@ public class Lox {
         Scanner sc = new Scanner(source);
         List<Token> tokens = sc.scanTokens();
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
 
         if (hadError) return;
         
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 
     public static void error(int line, String message) {
@@ -72,12 +72,12 @@ public class Lox {
     }
 
     public static void runtimeError(RuntimeError error) {
-        System.err.println(error.getMessage() + "\n[line " + error.token.line + "]");
+        System.err.printf("%s\n[line %s]", error.getMessage(), error.token.line);
         hadRuntimeError = true;
     }
 
     private static void report(int line, String where, String message) {
-        System.err.printf("[line %s] Error%s: ", line, where, message);
+        System.err.printf("[line %s] Error%s: %s", line, where, message);
         hadError = true;
     }
 }
