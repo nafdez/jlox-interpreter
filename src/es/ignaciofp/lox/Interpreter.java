@@ -7,6 +7,7 @@ import es.ignaciofp.lox.Expr.Grouping;
 import es.ignaciofp.lox.Expr.Literal;
 import es.ignaciofp.lox.Expr.Ternary;
 import es.ignaciofp.lox.Expr.Unary;
+import es.ignaciofp.lox.Expr.Variable;
 import es.ignaciofp.lox.Stmt.Block;
 import es.ignaciofp.lox.Stmt.Expression;
 import es.ignaciofp.lox.Stmt.Print;
@@ -141,6 +142,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Object visitVariableExpr(Variable expr) {
+        return environment.get(expr.name);
+    }
+
     private void checkNumberOperand(Token operator, Object operand) {
         if (operand instanceof Double) return;
         throw new RuntimeError(operator, "Operand must be a number.");
@@ -232,4 +238,5 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         environment.define(stmt.name.lexeme, value);
         return null;
     }
+
 }

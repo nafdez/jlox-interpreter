@@ -8,6 +8,7 @@ import java.util.List;
 public abstract class Expr {
 	public interface Visitor<R> {
 		public R visitAssignExpr(Assign expr);
+		public R visitTernaryExpr(Ternary expr);
 		public R visitBinaryExpr(Binary expr);
 		public R visitGroupingExpr(Grouping expr);
 		public R visitLiteralExpr(Literal expr);
@@ -26,6 +27,23 @@ public abstract class Expr {
 		@Override
 		public <R> R accept(Visitor<R> visitor) {
 			return visitor.visitAssignExpr(this);
+		}
+	}
+
+	public static class Ternary extends Expr {
+		public final Expr condition;
+		public final Expr left;
+		public final Expr right;
+
+		public Ternary(Expr condition, Expr left, Expr right) {
+			this.condition = condition;
+			this.left = left;
+			this.right = right;
+		}
+
+		@Override
+		public <R> R accept(Visitor<R> visitor) {
+			return visitor.visitTernaryExpr(this);
 		}
 	}
 
